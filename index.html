@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
     
     <style>
+        /* [All your existing styles remain exactly the same] */
         :root {
-            /* GREEN THEME */
             --primary-green: #00ff88;
             --primary-green-dark: #00cc6a;
             --primary-green-light: #4ade80;
@@ -1951,6 +1951,69 @@
             color: var(--text-light);
         }
 
+        /* ========== LIVE TIME WIDGET STYLES (Adapted from Portfolio) ========== */
+        .live-time-widget {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .live-time-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            animation: livePulse 1.5s infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); }
+        }
+
+        .live-time-header span {
+            color: var(--text-gray);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .live-time-display {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .live-time {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Syne', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .live-date {
+            color: var(--text-gray);
+            font-size: 13px;
+        }
+
+        .live-timezone {
+            color: var(--primary-green);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
         /* ========== MOBILE MENU BUTTON ========== */
         .mobile-menu-btn {
             display: none;
@@ -2088,6 +2151,7 @@
             .footer-logo img { height: 60px; }
             .footer-logo-text .footer-company-name { font-size: 18px; }
             .footer-logo-text .footer-company-tagline { font-size: 7px; }
+            .live-time { font-size: 24px; }
             :root {
                 --navbar-height: 80px;
             }
@@ -2098,6 +2162,622 @@
         .reveal-left { opacity: 0; transform: translateX(-60px); }
         .reveal-right { opacity: 0; transform: translateX(60px); }
         .reveal-scale { opacity: 0; transform: scale(0.8); }
+
+        /* ========== CHATBOT STYLES ========== */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9997;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chatbot-button {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-green-dark));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 30px rgba(0, 255, 136, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chatbot-button::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chatbot-button:hover::before {
+            opacity: 1;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 40px rgba(0, 255, 136, 0.6);
+        }
+
+        .chatbot-button i {
+            font-size: 28px;
+            color: var(--dark-bg);
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-button.active i.fa-comments {
+            display: none;
+        }
+
+        .chatbot-button i.fa-times {
+            display: none;
+        }
+
+        .chatbot-button.active i.fa-times {
+            display: block;
+        }
+
+        .chatbot-button.active i.fa-comments {
+            display: none;
+        }
+
+        /* Pulse animation for button */
+        .chatbot-button::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--primary-green);
+            animation: chatPulse 2s ease-out infinite;
+        }
+
+        @keyframes chatPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .chatbot-button.active::after {
+            display: none;
+        }
+
+        /* Notification badge */
+        .chat-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            background: #ff4757;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .chatbot-button.active .chat-notification {
+            display: none;
+        }
+
+        /* Chat Window */
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 380px;
+            height: 550px;
+            background: var(--dark-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .chatbot-window.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .chat-avatar img {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            filter: brightness(1.2);
+        }
+
+        .chat-avatar i {
+            font-size: 24px;
+            color: var(--dark-bg);
+        }
+
+        .chat-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            border: 2px solid var(--dark-bg);
+        }
+
+        .chat-info h4 {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+
+        .chat-info h4 span {
+            color: var(--primary-green);
+        }
+
+        .chat-info p {
+            font-size: 12px;
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-info p::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-green);
+            transform: rotate(90deg);
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 100%);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--primary-green);
+            border-radius: 3px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 10px;
+            animation: messageSlide 0.4s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.bot {
+            align-self: flex-start;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message-avatar i {
+            font-size: 16px;
+            color: var(--dark-bg);
+        }
+
+        .chat-message.user .message-avatar {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-message.user .message-avatar i {
+            color: var(--primary-green);
+        }
+
+        .message-content {
+            max-width: 250px;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .chat-message.bot .message-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-light);
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-message.user .message-bubble {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-green-dark));
+            color: var(--dark-bg);
+            border-bottom-right-radius: 5px;
+            font-weight: 500;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: var(--text-gray);
+            margin-top: 5px;
+            padding: 0 5px;
+        }
+
+        .chat-message.user .message-time {
+            text-align: right;
+        }
+
+        /* Quick Replies */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .quick-reply-btn {
+            background: transparent;
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-reply-btn:hover {
+            background: var(--primary-green);
+            color: var(--dark-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .quick-reply-btn i {
+            font-size: 14px;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 10px;
+            align-self: flex-start;
+            animation: messageSlide 0.4s ease;
+        }
+
+        .typing-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px 20px;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .typing-bubble span {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-bubble span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-bubble span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+            30% { transform: translateY(-10px); opacity: 1; }
+        }
+
+        /* Chat Input */
+        .chat-input-area {
+            padding: 15px 20px;
+            background: #1a1a1a;
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 18px;
+            border-radius: 25px;
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-area input::placeholder {
+            color: var(--text-gray);
+        }
+
+        .chat-input-area input:focus {
+            border-color: var(--primary-green);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .chat-send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-green-dark));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .chat-send-btn i {
+            color: var(--dark-bg);
+            font-size: 18px;
+        }
+
+        /* Service Card in Chat */
+        .chat-service-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-service-card:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--primary-green);
+            transform: translateX(5px);
+        }
+
+        .chat-service-card i {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .chat-service-card .service-info h5 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 2px;
+        }
+
+        .chat-service-card .service-info p {
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+
+        /* Contact Info in Chat */
+        .chat-contact-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .chat-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .chat-contact-item:hover {
+            transform: translateX(5px);
+        }
+
+        .chat-contact-item i {
+            width: 35px;
+            height: 35px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .chat-contact-item span {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* Back Button */
+        .back-to-menu {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-gray);
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .back-to-menu:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .chatbot-container {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                height: calc(100vh - 150px);
+                max-height: 500px;
+                right: -10px;
+            }
+            
+            .chatbot-button {
+                width: 55px;
+                height: 55px;
+            }
+            
+            .chatbot-button i {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2524,7 +3204,7 @@
                         </a>
 
                         <a href="tel:+9779801233715" class="contact-info-item reveal">
-                            <div class="icon"><i class="fas fa-phone-alt"></i></div>
+                            <div class="icon"><i class="fas fa-phone"></i></div>
                             <div class="info">
                                 <h4>Phone</h4>
                                 <p>+977 9801233715</p>
@@ -2561,7 +3241,7 @@
                         </a>
                         <p>Chalkhu Marg</p>
                         <p>Kathmandu, Nepal</p>
-                        <p style="margin-top: 15px;"><strong>Phone:</strong> +97715010764/65</p>
+                        <p style="margin-top: 15px;"><strong>Phone:</strong> +977-9801233715</p>
                         <p><strong>Email:</strong> info@itstationary.com</p>
                         
                         <div class="social-icons">
@@ -2603,11 +3283,24 @@
                             <input type="email" placeholder="Your email address" required>
                             <button type="submit">Subscribe</button>
                         </form>
+                        
+                        <!-- Live Time Widget - Added here -->
+                        <div class="live-time-widget">
+                            <div class="live-time-header">
+                                <span class="live-indicator"></span>
+                                <span>Live Time</span>
+                            </div>
+                            <div class="live-time-display">
+                                <span class="live-time" id="liveTime">00:00:00</span>
+                                <span class="live-date" id="liveDate">Loading...</span>
+                                <span class="live-timezone">Nepal Time (NPT)</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="footer-bottom">
-                    <p>© 2026 <strong>IT STATIONARY</strong>. All Rights Reserved</p>
+                    <p>© <span id="currentYear">2026</span> <strong>IT STATIONARY</strong>. All Rights Reserved</p>
                     <p style="margin-top: 8px;">Designed with ❤️ by <a href="#">IT STATIONARY</a></p>
                 </div>
             </div>
@@ -2922,6 +3615,403 @@
             cursor.style.display = 'none';
             cursorFollower.style.display = 'none';
         }
+
+        // ========== LIVE TIME & DATE FUNCTIONALITY (from portfolio) ==========
+        function updateLiveTime() {
+            const now = new Date();
+            
+            // Time in HH:MM:SS format
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const liveTimeElement = document.getElementById('liveTime');
+            if (liveTimeElement) {
+                liveTimeElement.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+            
+            // Date in full format: Day, Month Date, Year
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const liveDateElement = document.getElementById('liveDate');
+            if (liveDateElement) {
+                liveDateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+            
+            // Update copyright year
+            const currentYearElement = document.getElementById('currentYear');
+            if (currentYearElement) {
+                currentYearElement.textContent = now.getFullYear();
+            }
+        }
+
+        // Update time immediately and then every second
+        updateLiveTime();
+        setInterval(updateLiveTime, 1000);
+
+        // ========== CHATBOT FUNCTIONALITY ==========
+        let chatbotInitialized = false;
+
+        const botResponses = {
+            greeting: {
+                message: "👋 Hello! Welcome to <strong>IT STATIONARY</strong>! I'm your virtual assistant. How can I help you today?",
+                options: [
+                    { text: "About Us", icon: "fas fa-info-circle", action: "about" },
+                    { text: "Our Services", icon: "fas fa-cogs", action: "services" },
+                    { text: "Contact Us", icon: "fas fa-phone", action: "contact" },
+                    { text: "Our Portfolio", icon: "fas fa-briefcase", action: "portfolio" }
+                ]
+            },
+            about: {
+                message: "🏢 <strong>IT STATIONARY</strong> is a leading IT service and solution provider with <strong>10+ years</strong> of experience! We specialize in:\n\n✅ Enterprise-wide IT solutions\n✅ System integration services\n✅ Cost-effective implementations\n✅ 24/7 Support with zero delays\n\nOur team is committed to delivering sustainable solutions that minimize maintenance requirements.",
+                options: [
+                    { text: "Our Services", icon: "fas fa-cogs", action: "services" },
+                    { text: "Contact Us", icon: "fas fa-phone", action: "contact" },
+                    { text: "View Stats", icon: "fas fa-chart-line", action: "stats" },
+                    { text: "Main Menu", icon: "fas fa-home", action: "greeting" }
+                ]
+            },
+            services: {
+                message: "🛠️ We offer comprehensive IT services to power your business. Click on any service to learn more:",
+                showServices: true,
+                services: [
+                    { name: "DC-DR & Business Continuity", icon: "fas fa-building", desc: "Disaster recovery solutions" },
+                    { name: "Managed Services", icon: "fas fa-clipboard-check", desc: "Complete IT management" },
+                    { name: "AMC Services", icon: "fas fa-tools", desc: "Annual maintenance contracts" },
+                    { name: "Network & Security", icon: "fas fa-shield-alt", desc: "Secure infrastructure" },
+                    { name: "IT Consultancy", icon: "fas fa-lightbulb", desc: "Expert guidance" },
+                    { name: "Virtualization & Cloud", icon: "fas fa-cloud", desc: "Cloud solutions" }
+                ],
+                options: [
+                    { text: "Contact Us", icon: "fas fa-phone", action: "contact" },
+                    { text: "Main Menu", icon: "fas fa-home", action: "greeting" }
+                ]
+            },
+            contact: {
+                message: "📞 Ready to connect with us? Here's how you can reach our team:",
+                showContact: true,
+                contactInfo: [
+                    { type: "phone", icon: "fas fa-phone", text: "+977 9801233715", link: "tel:+9779801233715" },
+                    { type: "email", icon: "fas fa-envelope", text: "info@itstationary.com", link: "mailto:info@itstationary.com" },
+                    { type: "location", icon: "fas fa-map-marker-alt", text: "Chalkhu Marg, Kathmandu 44600", link: "https://www.google.com/maps/search/?api=1&query=Chalkhu+Marg+Kathmandu+44600" }
+                ],
+                options: [
+                    { text: "Our Services", icon: "fas fa-cogs", action: "services" },
+                    { text: "Main Menu", icon: "fas fa-home", action: "greeting" }
+                ]
+            },
+            portfolio: {
+                message: "💼 Our portfolio includes work with <strong>100+ satisfied clients</strong> including:\n\n🏦 Banks: Kumari Bank, NIC Asia, Global IME, Machhapuchhre Bank\n🏢 Enterprises: Huawei, Nepal Telecom\n🏛️ Government: Various projects\n\nWe specialize in Server, Storage, Network, Security & Backup solutions!",
+                options: [
+                    { text: "Our Services", icon: "fas fa-cogs", action: "services" },
+                    { type: "phone", icon: "fas fa-phone", text: "+977 9801233715", link: "tel:+9779801233715" },
+                    { text: "Main Menu", icon: "fas fa-home", action: "greeting" }
+                ]
+            },
+            stats: {
+                message: "📊 Here are our achievements:\n\n🎯 <strong>100+</strong> Happy Clients\n✅ <strong>80+</strong> Completed Projects\n📅 <strong>10+</strong> Years of Experience\n🏆 <strong>30+</strong> Professional Certifications\n\nWe take pride in our <strong>zero delay</strong> track record in project delivery!",
+                options: [
+                    { text: "Our Services", icon: "fas fa-cogs", action: "services" },
+                    { text: "Contact Us", icon: "fas fa-phone", action: "contact" },
+                    { text: "Main Menu", icon: "fas fa-home", action: "greeting" }
+                ]
+            },
+            default: {
+                message: "I'm not sure I understand. Let me help you with our main options:",
+                options: [
+                    { text: "About Us", icon: "fas fa-info-circle", action: "about" },
+                    { text: "Our Services", icon: "fas fa-cogs", action: "services" },
+                    { text: "Contact Us", icon: "fas fa-phone", action: "contact" },
+                    { text: "Main Menu", icon: "fas fa-home", action: "greeting" }
+                ]
+            }
+        };
+
+        // Service detail responses
+        const serviceDetails = {
+            "DC-DR & Business Continuity": "🏢 <strong>DC-DR & Business Continuity</strong>\n\nOur disaster recovery solutions ensure your business remains operational during adverse events. We provide:\n\n• Data Center setup & management\n• Disaster Recovery planning\n• Business continuity strategies\n• Real-time data replication\n• Failover systems",
+            "Managed Services": "📋 <strong>Managed Services</strong>\n\nRest assured with our complete IT infrastructure management:\n\n• 24/7 Monitoring & Support\n• Proactive maintenance\n• Performance optimization\n• Security management\n• Regular reporting",
+            "AMC Services": "🔧 <strong>AMC Services</strong>\n\nComprehensive Annual Maintenance Contracts:\n\n• Preventive maintenance\n• Hardware support\n• Software updates\n• Emergency repairs\n• On-site technical support",
+            "Network & Security": "🛡️ <strong>Network & Security</strong>\n\nEnterprise-grade security solutions:\n\n• Firewall implementation\n• Network monitoring\n• Threat detection\n• Vulnerability assessment\n• Security audits",
+            "IT Consultancy": "💡 <strong>IT Consultancy</strong>\n\nExpert guidance for your IT strategy:\n\n• Infrastructure assessment\n• Technology roadmap\n• Cost optimization\n• Digital transformation\n• Best practice implementation",
+            "Virtualization & Cloud": "☁️ <strong>Virtualization & Cloud</strong>\n\nModern cloud solutions:\n\n• Server virtualization\n• Cloud migration\n• Hybrid cloud setup\n• AWS/Azure integration\n• Container solutions"
+        };
+
+        function toggleChatbot() {
+            const window = document.getElementById('chatbotWindow');
+            const btn = document.getElementById('chatbotBtn');
+            
+            window.classList.toggle('active');
+            btn.classList.toggle('active');
+            
+            if (!chatbotInitialized && window.classList.contains('active')) {
+                initializeChatbot();
+                chatbotInitialized = true;
+            }
+        }
+
+        function initializeChatbot() {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = '';
+            
+            setTimeout(() => {
+                showTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    addBotMessage(botResponses.greeting);
+                }, 1000);
+            }, 500);
+        }
+
+        function getCurrentTime() {
+            return new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingHtml = `
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="typing-bubble">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            messagesContainer.insertAdjacentHTML('beforeend', typingHtml);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        function addBotMessage(response) {
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            let messageHtml = `
+                <div class="chat-message bot">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">${response.message.replace(/\n/g, '<br>')}</div>
+                        <div class="message-time">${getCurrentTime()}</div>
+            `;
+            
+            // Add services cards if applicable
+            if (response.showServices && response.services) {
+                response.services.forEach(service => {
+                    messageHtml += `
+                        <div class="chat-service-card" onclick="handleServiceClick('${service.name}')">
+                            <i class="${service.icon}"></i>
+                            <div class="service-info">
+                                <h5>${service.name}</h5>
+                                <p>${service.desc}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            // Add contact info if applicable
+            if (response.showContact && response.contactInfo) {
+                messageHtml += `<div class="chat-contact-info">`;
+                response.contactInfo.forEach(info => {
+                    messageHtml += `
+                        <a href="${info.link}" target="_blank" class="chat-contact-item">
+                            <i class="${info.icon}"></i>
+                            <span>${info.text}</span>
+                        </a>
+                    `;
+                });
+                messageHtml += `</div>`;
+            }
+            
+            // Add quick reply buttons
+            if (response.options && response.options.length > 0) {
+                messageHtml += `<div class="quick-replies">`;
+                response.options.forEach(option => {
+                    messageHtml += `
+                        <button class="quick-reply-btn" onclick="handleQuickReply('${option.action}', '${option.text}')">
+                            <i class="${option.icon}"></i>
+                            ${option.text}
+                        </button>
+                    `;
+                });
+                messageHtml += `</div>`;
+            }
+            
+            messageHtml += `</div></div>`;
+            
+            messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageHtml = `
+                <div class="chat-message user">
+                    <div class="message-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">${text}</div>
+                        <div class="message-time">${getCurrentTime()}</div>
+                    </div>
+                </div>
+            `;
+            messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function handleQuickReply(action, text) {
+            addUserMessage(text);
+            
+            setTimeout(() => {
+                showTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    const response = botResponses[action] || botResponses.default;
+                    addBotMessage(response);
+                }, 800 + Math.random() * 500);
+            }, 300);
+        }
+
+        function handleServiceClick(serviceName) {
+            addUserMessage(`Tell me about ${serviceName}`);
+            
+            setTimeout(() => {
+                showTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    const detail = serviceDetails[serviceName] || "I don't have detailed information about this service.";
+                    addBotMessage({
+                        message: detail,
+                        options: [
+                            { text: "Other Services", icon: "fas fa-cogs", action: "services" },
+                            { text: "Contact Us", icon: "fas fa-phone", action: "contact" },
+                            { text: "Main Menu", icon: "fas fa-home", action: "greeting" }
+                        ]
+                    });
+                }, 1000);
+            }, 300);
+        }
+
+        function sendUserMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            
+            if (text === '') return;
+            
+            addUserMessage(text);
+            input.value = '';
+            
+            // Process user input
+            setTimeout(() => {
+                showTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    processUserInput(text);
+                }, 800 + Math.random() * 500);
+            }, 300);
+        }
+
+        function processUserInput(text) {
+            const lowerText = text.toLowerCase();
+            
+            // Keyword matching
+            if (lowerText.includes('hi') || lowerText.includes('hello') || lowerText.includes('hey')) {
+                addBotMessage(botResponses.greeting);
+            } else if (lowerText.includes('about') || lowerText.includes('who')) {
+                addBotMessage(botResponses.about);
+            } else if (lowerText.includes('service') || lowerText.includes('offer') || lowerText.includes('what do you do')) {
+                addBotMessage(botResponses.services);
+            } else if (lowerText.includes('contact') || lowerText.includes('phone') || lowerText.includes('call') || lowerText.includes('email') || lowerText.includes('number')) {
+                addBotMessage(botResponses.contact);
+            } else if (lowerText.includes('portfolio') || lowerText.includes('client') || lowerText.includes('project')) {
+                addBotMessage(botResponses.portfolio);
+            } else if (lowerText.includes('stat') || lowerText.includes('achievement') || lowerText.includes('experience')) {
+                addBotMessage(botResponses.stats);
+            } else if (lowerText.includes('thank')) {
+                addBotMessage({
+                    message: "😊 You're welcome! Is there anything else I can help you with?",
+                    options: [
+                        { text: "Our Services", icon: "fas fa-cogs", action: "services" },
+                        { text: "Contact Us", icon: "fas fa-phone", action: "contact" },
+                        { text: "Main Menu", icon: "fas fa-home", action: "greeting" }
+                    ]
+                });
+            } else if (lowerText.includes('bye') || lowerText.includes('goodbye')) {
+                addBotMessage({
+                    message: "👋 Thank you for chatting with us! Feel free to reach out anytime. Have a great day!",
+                    options: [
+                        { text: "Start New Chat", icon: "fas fa-redo", action: "greeting" }
+                    ]
+                });
+            } else {
+                addBotMessage(botResponses.default);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendUserMessage();
+            }
+        }
+
+        // Add cursor hover effect to chatbot button
+        document.querySelector('.chatbot-button').addEventListener('mouseenter', () => {
+            if (typeof gsap !== 'undefined') {
+                gsap.to('.cursor', { scale: 2, duration: 0.3 });
+                gsap.to('.cursor-follower', { scale: 0, duration: 0.3 });
+            }
+        });
+
+        document.querySelector('.chatbot-button').addEventListener('mouseleave', () => {
+            if (typeof gsap !== 'undefined') {
+                gsap.to('.cursor', { scale: 1, duration: 0.3 });
+                gsap.to('.cursor-follower', { scale: 1, duration: 0.3 });
+            }
+        });
     </script>
+    
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chat-info">
+                    <h4>IT <span>STATIONARY</span> Bot</h4>
+                    <p>Online | Ready to help</p>
+                </div>
+                <button class="chat-close" onclick="toggleChatbot()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                <button class="chat-send-btn" onclick="sendUserMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        
+        <button class="chatbot-button" id="chatbotBtn" onclick="toggleChatbot()">
+            <span class="chat-notification">1</span>
+            <i class="fas fa-comments"></i>
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
 </body>
 </html>
